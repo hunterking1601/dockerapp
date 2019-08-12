@@ -1,4 +1,4 @@
-version: 2
+version: "2.0"
 jobs:
   build:
     working_directory: /dockerapp
@@ -17,4 +17,13 @@ jobs:
           command: |
             docker-compose up -d
             docker-compose run dockerapp python test.py
+      - deploy:
+          name: Pusht app docker Image
+          command: |
+            docker login -e $DOCKER_HUB_EMAIL -u $DOCKER_HUB_USER_ID -p $DOCKER_HUB_PWD
+            docker tag Docker_dockerapp $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+            docker tag Docker_dockerapp $DOCKER_HUB_USER_ID/dockerapp:lastest
+            docker push $DOCKER_HUB_USER_ID/dockerapp:$CIRCLE_SHA1
+        
+          
       
